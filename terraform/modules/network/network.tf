@@ -81,7 +81,16 @@ resource "aws_internet_gateway" "igw" {
 }
 
 # EIP AZ1A
-resource "aws_eip" "eip-ngw-az1a" {}
+resource "aws_eip" "eip-ngw-az1a" {
+  domain = "vpc"
+
+  tags = {
+    Name        = "eip-ngw-az1a"
+    Environment = "develop"
+    Project     = "pipeline"
+    ManagedBy   = "Terraform"
+  }
+}
 
 #NAT GATEWAY AZ1A
 resource "aws_nat_gateway" "ngw-az1a" {
@@ -101,7 +110,16 @@ resource "aws_nat_gateway" "ngw-az1a" {
 }
 
 # EIP AZ1C
-resource "aws_eip" "eip-ngw-az1c" {}
+resource "aws_eip" "eip-ngw-az1c" {
+  domain = "vpc"
+
+  tags = {
+    Name        = "eip-ngw-az1c"
+    Environment = "develop"
+    Project     = "pipeline"
+    ManagedBy   = "Terraform"
+  }
+}
 
 #NAT GATEWAY AZ1C
 resource "aws_nat_gateway" "ngw-az1c" {
@@ -154,8 +172,8 @@ resource "aws_route_table" "rt-priv-az1a" {
   vpc_id = aws_vpc.pipeline_vpc.id
 
   route {
-    cidr_block = var.rt-priv-az1a_cidr_block
-    gateway_id = aws_nat_gateway.ngw-az1a.id
+    cidr_block     = var.rt-priv-az1a_cidr_block
+    nat_gateway_id = aws_nat_gateway.ngw-az1a.id
   }
 
   tags = {
@@ -177,8 +195,8 @@ resource "aws_route_table" "rt-priv-az1c" {
   vpc_id = aws_vpc.pipeline_vpc.id
 
   route {
-    cidr_block = var.rt-priv-az1c_cidr_block
-    gateway_id = aws_nat_gateway.ngw-az1c.id
+    cidr_block     = var.rt-priv-az1c_cidr_block
+    nat_gateway_id = aws_nat_gateway.ngw-az1c.id
   }
 
   tags = {
