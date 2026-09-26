@@ -1,31 +1,39 @@
 variable "vpc_cidr_block_network" {
-  description = "CIDR block for the VPC"
+  description = "Faixa de IP da VPC"
+  type        = string
 }
 
 variable "sn-pub-az1a_cidr_block" {
-  description = "subnet public az1a"
+  description = "Faixa da sub-rede pública em us-east-1a"
+  type        = string
 }
 
 variable "sn-priv-az1a_cidr_block" {
-  description = "subnet private az1a"
+  description = "Faixa da sub-rede privada em us-east-1a"
+  type        = string
 }
 
 variable "sn-pub-az1c_cidr_block" {
-  description = "subnet public az1c"
+  description = "Faixa da sub-rede pública em us-east-1c"
+  type        = string
 }
 
 variable "sn-priv-az1c_cidr_block" {
-  description = "subnet private az1c"
+  description = "Faixa da sub-rede privada em us-east-1c"
+  type        = string
 }
 
 variable "rt-pub_cidr_block" {
-  description = "route table public"
+  description = "Destino da rota padrão da route table pública (vai para o IGW)"
+  type        = string
 }
 
 variable "rt-priv-az1a_cidr_block" {
-  description = "route table private az1a"
+  description = "Destino da rota padrão da route table privada us-east-1a (vai para o NAT)"
+  type        = string
 }
 
 variable "rt-priv-az1c_cidr_block" {
-  description = "route table private az1c"
+  description = "Destino da rota padrão da route table privada us-east-1c (vai para o NAT)"
+  type        = string
 }
