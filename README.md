@@ -18,8 +18,6 @@ Checkpoint 2 da disciplina de **Infraestrutura como Código** (FIAP, setembro de
 
 O código é dividido em dois **módulos** (`network` e `compute`) ligados pelo módulo raiz, que passa os IDs da rede para o compute.
 
-Este repositório é a versão organizada da entrega: os bugs encontrados foram corrigidos, o que faltava foi completado (os outputs do compute estavam vazios), o Checkov que estava comentado passou a rodar e o pipeline deixou de aplicar a cada push.
-
 ## Arquitetura
 
 <p align="center">
@@ -55,20 +53,19 @@ Este repositório é a versão organizada da entrega: os bugs encontrados foram 
 
 O `userdata.sh` instala o Apache, lê instance-id, zona, IP e tipo pelo **IMDSv2** e grava uma página com esses dados e um `instance.json`. A página consulta o `instance.json` a cada 2 segundos, sempre pelo ALB, e mostra quem respondeu: com duas instâncias saudáveis, as respostas alternam entre `us-east-1a` e `us-east-1c`.
 
-### Mudanças em relação à entrega
+### Decisões técnicas
 
-| O que era | O que ficou | Por quê |
+| Ponto | Como ficou | Por quê |
 |---|---|---|
-| ALB `internal = false` nas sub-redes **privadas** | ALB nas sub-redes públicas | um ALB público precisa de sub-redes com rota para o Internet Gateway |
-| Rotas privadas com o NAT em `gateway_id` | `nat_gateway_id` | `gateway_id` é o campo do Internet Gateway; o NAT tem atributo próprio |
-| SG das EC2 com a porta 80 aberta para `0.0.0.0/0` | só o SG do ALB | as instâncias ficam atrás do load balancer |
-| `data "template_file"` com caminho `./modules/...` | `filebase64("${path.module}/...")` | provider `template` arquivado; caminho só funcionava rodando de dentro de `terraform/` |
-| userdata clonava um repositório de terceiros para copiar um `phpinfo.php` | página própria, sem dependência externa | nada de código de fora baixado na inicialização |
-| AMI fixa (Amazon Linux 2 de 2021) e `key_name = "vockey"` | data source da AL2023 e `key_name` opcional | AMI antiga e key pair que só existe no AWS Academy |
-| `compute/output.tf` vazio | outputs do ALB, target group, ASG e AMI, e `site_url` na raiz | faltava a URL para acessar o site |
-| Variáveis sem tipo, portas como texto e nomes com `imput` | tipos, descrições em português e `input` | leitura e validação |
-| Backend com o bucket e a tabela no código | backend parcial + `backend.hcl.example` | nomes da conta fora do repositório |
-| Checkov comentado e pipeline com `apply` (e no fim `plan -destroy`) a cada push | CI com fmt, validate, test e Checkov sem credenciais + deploy manual | nenhum push mexe na AWS |
+| Posição do ALB | Nas sub-redes públicas | Um ALB público precisa de sub-redes com rota para o Internet Gateway |
+| Saída das instâncias | Rotas privadas com `nat_gateway_id`, um NAT por zona | As EC2 ficam sem IP público e ainda conseguem instalar pacotes |
+| Acesso às EC2 | Porta 80 liberada só para o security group do ALB | As instâncias só recebem tráfego pelo load balancer |
+| User data | `filebase64("${path.module}/...")` com uma página própria | Sem provider arquivado e sem baixar código de fora na inicialização |
+| Imagem | Data source da Amazon Linux 2023 e `key_name` opcional | Sempre a AMI atual, e funciona fora do AWS Academy |
+| Saídas | Outputs do ALB, target group, ASG e AMI, e `site_url` na raiz | A URL do site aparece no fim do `apply` |
+| Variáveis | Tipos e descrições em português | Leitura e validação |
+| Backend | Configuração parcial com `backend.hcl.example` | Bucket e tabela ficam fora do repositório |
+| Pipeline | CI com fmt, validate, test e Checkov sem credenciais, e deploy manual | Nenhum push mexe na AWS |
 
 ### Pipeline
 
