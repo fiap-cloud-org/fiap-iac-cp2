@@ -1,0 +1,6 @@
+# Copie para terraform.tfvars (fica fora do git). Todos os valores são opcionais.
+key_name         = "vockey" # key pair que já existe na conta (AWS Academy)
+instance_type    = "t2.micro"
+min_size         = 1
+desired_capacity = 2
+max_size         = 4
