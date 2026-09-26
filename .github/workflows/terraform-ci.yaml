@@ -1,0 +1,48 @@
+name: Terraform CI
+
+# Roda em todo push e PR, sem nenhuma credencial da AWS:
+# formatação, validação (sem backend), terraform test com provider simulado,
+# Checkov e a simulação do ASG com Docker.
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+env:
+  TERRAFORM_VERSION: 1.9.8
+
+jobs:
+  terraform:
+    name: fmt + validate + test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ env.TERRAFORM_VERSION }}
+      - run: terraform fmt -check -recursive -diff
+      - run: terraform -chdir=terraform init -backend=false -input=false
+      - run: terraform -chdir=terraform validate
+      - run: terraform -chdir=terraform test
+
+  checkov:
+    name: checkov
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install checkov
+      - run: checkov --config-file .checkov.yaml
+
+  simulacao:
+    name: simulação do ASG (Docker)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: tests/local/simular.sh
+      - if: always()
+        run: tests/local/simular.sh down
