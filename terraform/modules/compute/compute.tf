@@ -43,7 +43,7 @@ resource "aws_lb" "ec2-elb" {
   internal           = false
   load_balancer_type = "application"
   security_groups    = [aws_security_group.sg_elb.id]
-  subnets            = [var.sn-priv-az1a_id_imput_compute, var.sn-priv-az1c_id_imput_compute]
+  subnets            = [var.sn-pub-az1a_id_imput_compute, var.sn-pub-az1c_id_imput_compute]
 }
 
 resource "aws_lb_listener" "elb_listener" {
