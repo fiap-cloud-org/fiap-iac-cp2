@@ -24,10 +24,11 @@ resource "aws_security_group" "sg_ec2" {
     cidr_blocks = var.egress_cidr_blocks_ec2
   }
   ingress {
-    from_port   = var.ingress_from_port_ec2
-    to_port     = var.ingress_to_port_ec2
-    protocol    = var.ingress_protocol_ec2
-    cidr_blocks = var.ingress_cidr_blocks_ec2
+    from_port = var.ingress_from_port_ec2
+    to_port   = var.ingress_to_port_ec2
+    protocol  = var.ingress_protocol_ec2
+    # Só o ALB fala com as instâncias; nada chega direto da internet.
+    security_groups = [aws_security_group.sg_elb.id]
   }
 }
 

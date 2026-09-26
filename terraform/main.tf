@@ -30,7 +30,6 @@ module "compute" {
   ingress_from_port_ec2         = var.ingress_from_port_ec2
   ingress_to_port_ec2           = var.ingress_to_port_ec2
   ingress_protocol_ec2          = var.ingress_protocol_ec2
-  ingress_cidr_blocks_ec2       = var.ingress_cidr_blocks_ec2
   vpc_id_imput_compute          = module.network.vpc_id_output_network
   sn-pub-az1a_id_imput_compute  = module.network.sn-pub-az1a_id_output_network
   sn-priv-az1a_id_imput_compute = module.network.sn-priv-az1a_id_output_network
