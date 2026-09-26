@@ -1,18 +1,18 @@
 #VARIAVEIS DE IMPUT DO COMPUTE
-variable "vpc_id_imput_compute" {
-  description = "vpc id imput compute"
+variable "vpc_id_input_compute" {
+  description = "vpc id input compute"
 }
-variable "sn-pub-az1a_id_imput_compute" {
-  description = "subnet public az1a id imput compute"
+variable "sn-pub-az1a_id_input_compute" {
+  description = "subnet public az1a id input compute"
 }
-variable "sn-priv-az1a_id_imput_compute" {
-  description = "subnet private az1a id imput compute"
+variable "sn-priv-az1a_id_input_compute" {
+  description = "subnet private az1a id input compute"
 }
-variable "sn-pub-az1c_id_imput_compute" {
-  description = "subnet public az1c id imput compute"
+variable "sn-pub-az1c_id_input_compute" {
+  description = "subnet public az1c id input compute"
 }
-variable "sn-priv-az1c_id_imput_compute" {
-  description = "subnet private az1c id imput compute"
+variable "sn-priv-az1c_id_input_compute" {
+  description = "subnet private az1c id input compute"
 }
 #---------------------------------------------
 
