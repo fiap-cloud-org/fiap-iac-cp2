@@ -1,5 +1,5 @@
 <h1 align="center">
-  CP2 · Infraestrutura AWS completa com Terraform e pipeline
+  CP2 - Infraestrutura AWS completa com Terraform e pipeline
 </h1>
 
 <p align="center">
