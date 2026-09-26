@@ -78,6 +78,16 @@ resource "aws_launch_template" "ec2-launch-template" {
   key_name               = var.key_name
   vpc_security_group_ids = [aws_security_group.sg_ec2.id]
   user_data              = filebase64("${path.module}/scripts/userdata.sh")
+
+  tag_specifications {
+    resource_type = "instance"
+    tags = {
+      Name        = "app-dynamicsite"
+      Environment = "develop"
+      Project     = "pipeline"
+      ManagedBy   = "Terraform"
+    }
+  }
 }
 
 resource "aws_autoscaling_group" "ec2-asg" {
@@ -99,6 +109,12 @@ resource "aws_autoscaling_group" "ec2-asg" {
   }
   target_group_arns   = [aws_lb_target_group.tg-ec2-elb.arn]
   vpc_zone_identifier = [var.sn-priv-az1a_id_input_compute, var.sn-priv-az1c_id_input_compute]
+
+  tag {
+    key                 = "Name"
+    value               = "app-dynamicsite"
+    propagate_at_launch = true
+  }
 }
 
 
