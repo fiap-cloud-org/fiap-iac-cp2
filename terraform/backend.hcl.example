@@ -1,0 +1,8 @@
+# Copie para backend.hcl (fica fora do git) e troque pelos seus recursos.
+# O bucket S3 e a tabela DynamoDB (chave de partição LockID, tipo String)
+# precisam existir antes do terraform init.
+bucket         = "<seu-bucket-de-tfstate>"
+key            = "fiap-iac-cp2/terraform.tfstate"
+region         = "us-east-1"
+dynamodb_table = "<sua-tabela-de-lock>"
+encrypt        = true
