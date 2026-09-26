@@ -81,7 +81,16 @@ resource "aws_internet_gateway" "igw" {
 }
 
 # EIP AZ1A
-resource "aws_eip" "eip-ngw-az1a" {}
+resource "aws_eip" "eip-ngw-az1a" {
+  domain = "vpc"
+
+  tags = {
+    Name        = "eip-ngw-az1a"
+    Environment = "develop"
+    Project     = "pipeline"
+    ManagedBy   = "Terraform"
+  }
+}
 
 #NAT GATEWAY AZ1A
 resource "aws_nat_gateway" "ngw-az1a" {
@@ -101,7 +110,16 @@ resource "aws_nat_gateway" "ngw-az1a" {
 }
 
 # EIP AZ1C
-resource "aws_eip" "eip-ngw-az1c" {}
+resource "aws_eip" "eip-ngw-az1c" {
+  domain = "vpc"
+
+  tags = {
+    Name        = "eip-ngw-az1c"
+    Environment = "develop"
+    Project     = "pipeline"
+    ManagedBy   = "Terraform"
+  }
+}
 
 #NAT GATEWAY AZ1C
 resource "aws_nat_gateway" "ngw-az1c" {
