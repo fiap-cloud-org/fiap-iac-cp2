@@ -1,0 +1,24 @@
+# Configuração do Checkov (roda no CI). Cada exceção abaixo é uma escolha
+# consciente do laboratório, não um achado esquecido.
+directory:
+  - terraform
+framework:
+  - terraform
+compact: true
+quiet: true
+skip-check:
+  # Sem domínio próprio nem certificado no ACM (AWS Academy): o ALB só tem HTTP 80.
+  - CKV_AWS_2    # ALB com HTTPS
+  - CKV_AWS_103  # TLS 1.2 no listener
+  - CKV_AWS_378  # listener/target group em HTTP
+  - CKV2_AWS_20  # redirecionar HTTP para HTTPS
+  # O ALB é a porta pública do site: precisa aceitar HTTP 80 de qualquer origem.
+  - CKV_AWS_260  # SG com 0.0.0.0/0 na porta 80 (só o sg_elb; o sg_ec2 aceita só o ALB)
+  # Custos e recursos extras fora do escopo do checkpoint.
+  - CKV2_AWS_28  # WAF na frente do ALB
+  - CKV_AWS_91   # access logs do ALB em S3
+  - CKV2_AWS_11  # VPC flow logs
+  # Ambiente de laboratório, criado e destruído pelo pipeline.
+  - CKV_AWS_150  # deletion protection no ALB
+  # Sub-redes públicas do desenho original (NAT e ALB); nenhuma instância sobe nelas.
+  - CKV_AWS_130  # IP público automático nas sub-redes públicas
