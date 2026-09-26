@@ -36,4 +36,8 @@ module "compute" {
   sn-pub-az1c_id_input_compute  = module.network.sn-pub-az1c_id_output_network
   sn-priv-az1c_id_input_compute = module.network.sn-priv-az1c_id_output_network
   min_size                      = var.min_size
+  max_size                      = var.max_size
+  desired_capacity              = var.desired_capacity
+  instance_type                 = var.instance_type
+  key_name                      = var.key_name
 }

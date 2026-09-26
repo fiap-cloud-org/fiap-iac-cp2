@@ -59,25 +59,62 @@ resource "aws_lb_listener" "elb_listener" {
 }
 
 
+# Amazon Linux 2023 mais recente (a AMI fixa da entrega era um Amazon Linux 2
+# de 2021).
+data "aws_ami" "al2023" {
+  most_recent = true
+  owners      = ["amazon"]
+
+  filter {
+    name   = "name"
+    values = ["al2023-ami-2023.*-x86_64"]
+  }
+}
+
 resource "aws_launch_template" "ec2-launch-template" {
   name_prefix            = "app-dynamicsite"
-  image_id               = "ami-02e136e904f3da870"
-  instance_type          = "t2.micro"
-  key_name               = "vockey"
+  image_id               = data.aws_ami.al2023.id
+  instance_type          = var.instance_type
+  key_name               = var.key_name
   vpc_security_group_ids = [aws_security_group.sg_ec2.id]
   user_data              = filebase64("${path.module}/scripts/userdata.sh")
+
+  tag_specifications {
+    resource_type = "instance"
+    tags = {
+      Name        = "app-dynamicsite"
+      Environment = "develop"
+      Project     = "pipeline"
+      ManagedBy   = "Terraform"
+    }
+  }
 }
 
 resource "aws_autoscaling_group" "ec2-asg" {
-  desired_capacity = 2
-  max_size         = 4
+  name_prefix      = "ec2-asg-"
+  desired_capacity = var.desired_capacity
+  max_size         = var.max_size
   min_size         = var.min_size
   launch_template {
     id      = aws_launch_template.ec2-launch-template.id
-    version = "$Latest"
+    version = aws_launch_template.ec2-launch-template.latest_version
+  }
+
+  # Troca as instâncias aos poucos quando o launch template muda.
+  instance_refresh {
+    strategy = "Rolling"
+    preferences {
+      min_healthy_percentage = 50
+    }
   }
   target_group_arns   = [aws_lb_target_group.tg-ec2-elb.arn]
   vpc_zone_identifier = [var.sn-priv-az1a_id_input_compute, var.sn-priv-az1c_id_input_compute]
+
+  tag {
+    key                 = "Name"
+    value               = "app-dynamicsite"
+    propagate_at_launch = true
+  }
 }
 
 

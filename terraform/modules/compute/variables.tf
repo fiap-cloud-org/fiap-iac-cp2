@@ -103,3 +103,23 @@ variable "min_size" {
   description = "Mínimo de instâncias no Auto Scaling Group"
   type        = number
 }
+# VARIÁVEIS DAS INSTÂNCIAS
+variable "instance_type" {
+  description = "Tipo das instâncias do ASG"
+  type        = string
+}
+
+variable "key_name" {
+  description = "Key pair para SSH (null = sem chave)"
+  type        = string
+}
+
+variable "desired_capacity" {
+  description = "Quantidade desejada de instâncias no ASG"
+  type        = number
+}
+
+variable "max_size" {
+  description = "Máximo de instâncias no ASG"
+  type        = number
+}
