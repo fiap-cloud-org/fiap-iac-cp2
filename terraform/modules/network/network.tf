@@ -212,3 +212,16 @@ resource "aws_route_table_association" "rta-priv-az1c" {
   subnet_id      = aws_subnet.sn-priv-az1c.id
   route_table_id = aws_route_table.rt-priv-az1c.id
 }
+# SECURITY GROUP PADRÃO DA VPC SEM NENHUMA REGRA
+# Nada usa o SG default; sem regras, um recurso criado sem SG explícito
+# não fica aberto por engano.
+resource "aws_default_security_group" "default" {
+  vpc_id = aws_vpc.pipeline_vpc.id
+
+  tags = {
+    Name        = "sg-default-bloqueado"
+    Environment = "develop"
+    Project     = "pipeline"
+    ManagedBy   = "Terraform"
+  }
+}
